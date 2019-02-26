@@ -1,0 +1,22 @@
+
+#!/bin/bash
+
+hosts=(home.aaronstuder.com parents.aaronstuder.com grandparents.aaronstuder.com)
+
+for i in ${hosts[@]}; do
+        IP=`dig +short $i`
+        #echo "$IP"
+        echo "$IP" >> ip.tmp
+
+done
+
+readarray a < ip.tmp
+
+for i in ${a[@]}; do
+        echo "$i"
+        firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" source address=" $i " accept'
+
+
+done
+rm ip.tmp
+exit
